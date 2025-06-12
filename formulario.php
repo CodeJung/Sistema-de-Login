@@ -1,77 +1,65 @@
-
 <?php
-
-if(isset($_POST['submit']))
-{
-     print_r('Nome: ' . $_POST['nome']);
-     print_r('<br>');
-     print_r('Moto: ' . $_POST['moto']);
-     print_r('<br>');
-     print_r('Cargo: ' . $_POST['cargo']);
-     print_r('<br>');
-     print_r('Senha: ' . $_POST['senha']);
-     print_r('<br>');
-     print_r('email: ' . $_POST['email']);
-     print_r('<br>');
-    
+if (isset($_POST['submit'])) {
     include_once('config.php');
 
-    $nome = $_POST['nome'];
-    $moto = $_POST['moto'];
-    $cargo = $_POST['cargo'];
-    
-    $senha = $_POST['senha'];
-    $email = $_POST['email'];
+    // Proteção básica contra SQL injection
+    $nome  = mysqli_real_escape_string($conexao, $_POST['nome']);
+    $senha = mysqli_real_escape_string($conexao, $_POST['senha']);
+    $email = mysqli_real_escape_string($conexao, $_POST['email']);
+    $moto  = mysqli_real_escape_string($conexao, $_POST['moto']);
+    $cargo = mysqli_real_escape_string($conexao, $_POST['cargo']);
 
-    $result = mysqli_query($conexao, "INSERT INTO usuarios(nome,moto,cargo,senha,email) 
-    VALUES ('$nome','$senha','$email','$moto','$cargo')");
+    $query = "INSERT INTO usuarios(nome, senha, email, moto, cargo) 
+              VALUES ('$nome', '$senha', '$email', '$moto', '$cargo')";
 
-    header('Location: login.php');
+    if (mysqli_query($conexao, $query)) {
+        header('Location: login.php');
+        exit;
+    } else {
+        echo "Erro ao cadastrar: " . mysqli_error($conexao);
+    }
 }
-
 ?>
-
-
-
-
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulário | GN</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body{
+        body {
             font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
             background-image: linear-gradient(to right, rgb(20, 147, 220), rgb(17, 54, 71));
         }
-        .box{
+        .box {
             color: white;
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%,-50%);
+            transform: translate(-50%, -50%);
             background-color: rgba(0, 0, 0, 0.6);
-            padding: 15px;
+            padding: 25px;
             border-radius: 15px;
-            width: 20%;
+            width: 300px;
         }
-        fieldset{
-            border: 3px solid dodgerblue;
+        fieldset {
+            border: 2px solid dodgerblue;
+            padding: 15px;
         }
-        legend{
+        legend {
             border: 1px solid dodgerblue;
             padding: 10px;
             text-align: center;
             background-color: dodgerblue;
             border-radius: 8px;
+            font-weight: bold;
         }
-        .inputBox{
+        .inputBox {
             position: relative;
+            margin-bottom: 20px;
         }
-        .inputUser{
+        .inputUser {
             background: none;
             border: none;
             border-bottom: 1px solid white;
@@ -81,66 +69,75 @@ if(isset($_POST['submit']))
             width: 100%;
             letter-spacing: 2px;
         }
-        .labelInput{
+        .labelInput {
             position: absolute;
-            top: 0px;
-            left: 0px;
+            top: 0;
+            left: 0;
             pointer-events: none;
             transition: .5s;
         }
         .inputUser:focus ~ .labelInput,
-        .inputUser:valid ~ .labelInput{
+        .inputUser:valid ~ .labelInput {
             top: -20px;
             font-size: 12px;
             color: dodgerblue;
         }
-        #data_nascimento{
-            border: none;
-            padding: 8px;
-            border-radius: 10px;
-            outline: none;
-            font-size: 15px;
+        .video-fundo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -1;
+            filter: brightness(0.4);
         }
-
     </style>
 </head>
-<body style="background-image: url(ProjeJPE.png); background-size: cover;">
-<a href="home.php">Voltar</a>
-    <div class="box">
-        <form action="formulario.php" method="POST">
-            <fieldset>
-                <legend><b>Fórmulário de Clientes</b></legend>
-                <br>
-                <div class="inputBox">
-                    <input type="text" name="nome" id="nome" class="inputUser" required>
-                    <label for="nome" class="labelInput">Nome completo</label>
-                </div>
-                <br><br>
-                <div class="inputBox">
-                    <input type="password" name="senha" id="senha" class="inputUser" required>
-                    <label for="senha" class="labelInput">Senha</label>
-                </div>
-                <br><br>
-                <div class="inputBox">
-                    <input type="text" name="email" id="email" class="inputUser" required>
-                    <label for="email" class="labelInput">Email</label>
-                </div>
-                <br><br>
-                <div class="inputBox">
-                    <input type="text" name="moto" id="moto" class="inputUser" required>
-                    <label for="moto" class="labelInput">Moto</label>
-                </div>
-                <br><br>
+<body>
 
-                <div class="inputBox">
-                    <input type="text" name="cargo" id="cargo" class="inputUser" required>
-                    <label for="cargo" class="labelInput">Cargo</label>
-                </div>
-                <br><br>
-               
-                <input type="submit" name="submit" id="submit">
-            </fieldset>
-        </form>
-    </div>
+<!-- Vídeo de fundo -->
+<video class="video-fundo" autoplay muted loop>
+    <source src="Inspiration ｜ 2016 Harley-Davidson Motorcycles.mp4" type="video/mp4">
+    Seu navegador não suporta vídeos HTML5.
+</video>
+
+<!-- Botão Voltar -->
+<div class="position-absolute top-0 start-0 m-3">
+    <a href="home.php" class="btn btn-primary">Voltar</a>
+</div>
+
+<!-- Formulário -->
+<div class="box">
+    <form action="formulario.php" method="POST">
+        <fieldset>
+            <legend>Formulário de Clientes</legend>
+            <div class="inputBox">
+                <input type="text" name="nome" id="nome" class="inputUser" required>
+                <label for="nome" class="labelInput">Nome completo</label>
+            </div>
+            <div class="inputBox">
+                <input type="password" name="senha" id="senha" class="inputUser" required>
+                <label for="senha" class="labelInput">Senha</label>
+            </div>
+            <div class="inputBox">
+                <input type="text" name="email" id="email" class="inputUser" required>
+                <label for="email" class="labelInput">Email</label>
+            </div>
+            <div class="inputBox">
+                <input type="text" name="moto" id="moto" class="inputUser" required>
+                <label for="moto" class="labelInput">Moto</label>
+            </div>
+            <div class="inputBox">
+                <input type="text" name="cargo" id="cargo" class="inputUser" required>
+                <label for="cargo" class="labelInput">Cargo</label>
+            </div>
+            <div class="text-center">
+                <input type="submit" name="submit" class="btn btn-success mt-2" value="Enviar">
+            </div>
+        </fieldset>
+    </form>
+</div>
+
 </body>
 </html>

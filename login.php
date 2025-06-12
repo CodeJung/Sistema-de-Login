@@ -13,6 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <meta charset="UTF-8">
     <title>Login Usuário</title>
     <style>
@@ -54,17 +56,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin: 20px;
             display: inline-block;
         }
+        .video-fundo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -1;
+            filter: brightness(0.4);
+        }
     </style>
 </head>
 <body>
-    <a href="home.php">Voltar</a>
+
+<video class="video-fundo" autoplay muted loop>
+    <source src="Inspiration ｜ 2016 Harley-Davidson Motorcycles.mp4" type="video/mp4">
+    Seu navegador não suporta vídeos HTML5.
+    
+</video>
+
+
+
     <div class="box">
         <h1>Login Usuário</h1>
         <form method="POST">
             <input type="text" name="email" placeholder="Email" required><br>
             <input type="password" name="senha" placeholder="Senha" required><br>
-            <input type="submit" class="inputSubmit" value="Entrar">
-        </form>
+            <input type="submit" class="inputSubmit" value="Entrar"> 
+           
+        </form> 
+        
     </div>
-</body>
+    <a href="home.php" class="btn btn-primary btn-lg">Voltar</a></body>
 </html>

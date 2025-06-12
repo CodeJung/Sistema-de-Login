@@ -28,13 +28,36 @@
             border-radius: 10px;
             padding: 10px;
         }
-        a:hover{
+        .video-fundo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -1;
+            filter: brightness(0.4);
+        }
+        .imagem-centralizada img {
+            width: 150px;     /* Tamanho pequeno */
+            height: auto;     /* Mantém proporção */
+            border-radius: 10px; /* Opcional: cantos arredondados */
+        }
+        
     
     </style>
 </head>
 <body style="background-image: url(ProjeJPE.png); background-size: cover;">
 
-    <h1>Motoclub</h1>
+<video class="video-fundo" autoplay muted loop>
+    <source src="Inspiration ｜ 2016 Harley-Davidson Motorcycles.mp4" type="video/mp4">
+    Seu navegador não suporta vídeos HTML5.
+</video>
+
+    <div class="imagem-centralizada">
+        <img src="LogoMoto.png" alt="Imagem Centralizada">
+    </div>
+
     
     <div class="box">
         <a href="login.php">Login</a>
